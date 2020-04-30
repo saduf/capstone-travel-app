@@ -18,7 +18,7 @@ const cors = require('cors');
 app.use(cors());
 
 /* Initialize the main project folder*/
-app.use(express.static('../client'));
+app.use(express.static('dist'));
 
 const port = 3000;
 /* Spin up the server*/
@@ -27,6 +27,11 @@ const server = app.listen(port, listening);
     // console.log(server);
     console.log(`running on localhost: ${port}`);
   };
+
+app.get('/', function (req, res) {
+    res.sendFile('dist/index.html')
+    //res.sendFile(path.resolve('src/client/views/index.html'))
+})
 
 //GET Route I: Server Side
 app.get('/all', sendObject);

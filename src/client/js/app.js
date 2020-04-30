@@ -27,7 +27,7 @@ function getWeatherByZip(e) {
         console.log('userResponse', userResponse)
 
         //Add data to post request
-        postData('/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
+        postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
         .then(
             updateUI()
         )
@@ -73,7 +73,7 @@ const postData = async ( url = '', data = {})=>{
   
   /*Asyn call GET to Dynamically Update UI*/
   const updateUI = async () => {
-    const request = await fetch('/getLast');
+    const request = await fetch('http://localhost:3000/getLast');
     try{
       const allData = await request.json();
       //const index = allData.length-1;
@@ -89,5 +89,7 @@ const postData = async ( url = '', data = {})=>{
       console.log("error", error);
     }
   }
+
+  export { getWeatherByZip }
   
   
