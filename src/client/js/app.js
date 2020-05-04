@@ -1,20 +1,59 @@
-/* Global Variables */
+import { dateValidation } from './validateDate.js'
 
-const apiKey = '';
 const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
-let zip = '';
+let cityName = '';
 let userResponse = '';
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+let newDate = d.getMonth()+1 +'.'+ d.getDate()+'.'+ d.getFullYear();
 
+const datepicker = require('js-datepicker')
+
+const picker = datepicker('#travelDate')
+
+const monthsMap = { 'Jan': 1,
+                  'Feb': 2,
+                  'Mar': 3,
+                  'Apr': 4,
+                  'May': 5,
+                  'Jun': 6,
+                  'Jul': 7,
+                  'Aug': 8,
+                  'Sep': 9,
+                  'Oct': 10,
+                  'Nov': 11,
+                  'Dec': 12
+                }
+const daysMap = { '1': 31,
+                  '2': 28,
+                  '3': 31,
+                  '4': 30,
+                  '5': 31,
+                  '6': 30,
+                  '7': 31,
+                  '8': 31,
+                  '9': 30,
+                  '10': 31,
+                  '11': 30,
+                  '12': 31
+}
+
+console.log("Todays date is: ", newDate)
 
 // Add listener to button with id generate
 document.getElementById('generate').addEventListener('click', getWeatherByZip);
 
 function getWeatherByZip(e) {
-    zip = document.getElementById('zip').value;
-    getResponse(baseURL, zip, apiKey)
+    cityName = document.getElementById('city').value;
+    console.log("City name @ app: " + cityName)
+    const travelDate = document.getElementById('travelDate').value;
+
+    dateValidation(travelDate);
+
+    var keys = Object.keys(travelDate);
+    console.log("KEYS:", keys)
+    
+    getResponse(cityName)
 
     .then(function(data) {
         userResponse = document.getElementById('feelings').value;
@@ -22,9 +61,9 @@ function getWeatherByZip(e) {
 
         // console.log(data);
 
-        console.log('Temperature', data.main.temp);
-        console.log('Date:', newDate);
-        console.log('userResponse', userResponse)
+        // console.log('Temperature', data.main.temp);
+        // console.log('Date:', newDate);
+        // console.log('userResponse', userResponse)
 
         //Add data to post request
         postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
@@ -35,13 +74,13 @@ function getWeatherByZip(e) {
 }
 
 /*Asyn call GET to Weather API*/
-const getResponse = async (baseURL, zip, apiKey)=>{
-    const res = await fetch(baseURL + zip + ',us' + apiKey + '&units=imperial')
+const getResponse = async (cityName)=>{
+    const res = await fetch('http://localhost:3000/getCityCoordinates?cityName=' + cityName)
     // const res = await fetch(baseURL + zip + apiKey)
 
     try {
         const data = await res.json();
-        console.log('Data from weather API: ',  data);
+        console.log('Data from GeoMAp API: ',  data);
         console.log("Main Temp: ", data.main.temp);
         return data;
     } catch(error) {

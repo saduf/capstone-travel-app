@@ -1,5 +1,16 @@
 /*server.js*/
 /* Empty JS object to act as endpoint for all routes */
+
+/* Global Variables */
+require('dotenv').config()
+
+const geoMapKey = process.env.GEOMAP_ID;
+
+var GeocoderGeonames = require('geocoder-geonames'),
+    geocoder = new GeocoderGeonames({
+      username:      process.env.GEOMAP_API,
+    });
+
 const projectData = [];
 let newEntry = '';
 
@@ -33,6 +44,27 @@ app.get('/', function (req, res) {
     //res.sendFile(path.resolve('src/client/views/index.html'))
 })
 
+app.get('/getCityCoordinates', function (req, res) {
+  console.log('City Name:' + req.query.cityName)
+
+  geocoder.get('search',{
+    q: req.query.cityName
+  })
+  .then(function(response){
+    // var jsonObjectResponse = JSON.parse(response);
+    console.log(typeof response);
+    var keys = Object.keys(response);
+    console.log("KEYS:", keys)
+    console.log("Total Results Count: ", response['totalResultsCount'])
+    console.log("First Element: ", response['geonames'][0])
+    console.log("Accessing Long: "+ response['geonames'][0]['lng'] + "and lat: " + response['geonames'][0]['lat'])
+  })
+  .catch(function(error){
+    console.log(error);
+  });
+  //res.sendFile(path.resolve('src/client/views/index.html'))
+})
+
 //GET Route I: Server Side
 app.get('/all', sendObject);
 
@@ -54,13 +86,23 @@ app.post('/add', callBack);
 
 function callBack(req,res){
 
-  newEntry = {
-    temperature: req.body.temperature,
-    date: req.body.date,
-    userResponse: req.body.userResponse
-  }
-    projectData.push(newEntry);
-    console.log(projectData)
+  // newEntry = {
+  //   temperature: req.body.temperature,
+  //   date: req.body.date,
+  //   userResponse: req.body.userResponse
+  // }
+  //   projectData.push(newEntry);
+  //   console.log(projectData)
 
-    res.send(projectData);
+  //   res.send(projectData);
+
+    // geocoder.get('search',{
+    //   q: 'Berlin'
+    // })
+    // .then(function(response){
+    //   console.log(response);
+    // })
+    // .catch(function(error){
+    //   console.log(error);
+    // });
 }
