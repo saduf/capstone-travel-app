@@ -3,7 +3,7 @@
 
 /* Global Variables */
 require('dotenv').config()
-
+const fetch = require("node-fetch");
 const geoMapKey = process.env.GEOMAP_ID;
 
 var GeocoderGeonames = require('geocoder-geonames'),
@@ -46,6 +46,7 @@ app.get('/', function (req, res) {
 
 app.get('/getCityCoordinates', function (req, res) {
   console.log('City Name:' + req.query.cityName)
+  console.log('Days to travel from the server: ' + req.query.daysToTravel)
 
   geocoder.get('search',{
     q: req.query.cityName
@@ -58,12 +59,91 @@ app.get('/getCityCoordinates', function (req, res) {
     console.log("Total Results Count: ", response['totalResultsCount'])
     console.log("First Element: ", response['geonames'][0])
     console.log("Accessing Long: "+ response['geonames'][0]['lng'] + "and lat: " + response['geonames'][0]['lat'])
+
+    newEntry = {
+      lat: response['geonames'][0]['lat'],
+      lng: response['geonames'][0]['lng'],
+      name: response['geonames'][0]['name'],
+      countryName: response['geonames'][0]['countryName'],
+      daysToTravel: req.query.daysToTravel
+    }
+
+    projectData.push(newEntry);
+    const index = projectData.length-1;
+    res.send(projectData[index]);
+
   })
   .catch(function(error){
     console.log(error);
   });
   //res.sendFile(path.resolve('src/client/views/index.html'))
 })
+
+app.get('/getWeatherForecast', function (req, res) {
+  console.log('Lat:' + req.query.lat)
+  console.log('Lon: ' + req.query.lng)
+
+  const lat = req.query.lat;
+  const lng = req.query.lng;
+  const API_KEY = process.env.WBIT_API;
+
+  const baseURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}`
+
+  console.log("Calling Weather API from server: ", baseURL);
+
+  getResponse(baseURL)
+  .then(function(response){ 
+    console.log("Returned data from API: ", response);
+    var keys = Object.keys(response);
+    console.log("KEYS:", keys)
+  })
+  .catch(function(error){
+    console.log(error);
+  });
+
+  // geocoder.get('search',{
+  //   q: req.query.cityName
+  // })
+  // .then(function(response){
+  //   // var jsonObjectResponse = JSON.parse(response);
+  //   console.log(typeof response);
+  //   var keys = Object.keys(response);
+  //   console.log("KEYS:", keys)
+  //   console.log("Total Results Count: ", response['totalResultsCount'])
+  //   console.log("First Element: ", response['geonames'][0])
+  //   console.log("Accessing Long: "+ response['geonames'][0]['lng'] + "and lat: " + response['geonames'][0]['lat'])
+
+  //   newEntry = {
+  //     lat: response['geonames'][0]['lat'],
+  //     lng: response['geonames'][0]['lng'],
+  //     name: response['geonames'][0]['name'],
+  //     countryName: response['geonames'][0]['countryName'],
+  //     daysToTravel: req.query.daysToTravel
+  //   }
+
+  //   projectData.push(newEntry);
+  //   const index = projectData.length-1;
+  //   res.send(projectData[index]);
+
+  // })
+  // .catch(function(error){
+  //   console.log(error);
+  // });
+})
+
+// Call weatherbit with lat and lng
+const getResponse = async (baseURL)=>{
+  const res = await fetch(baseURL)
+  // const res = await fetch(baseURL + zip + apiKey)
+
+  try {
+      const data = await res.json();
+      console.log('Data from weather API: ',  data);
+      return data;
+  } catch(error) {
+      console.log('error', error)
+  }
+}
 
 //GET Route I: Server Side
 app.get('/all', sendObject);
