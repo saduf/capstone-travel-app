@@ -2,8 +2,8 @@ import { dateValidation } from './validateDate.js'
 
 const geoBaseURL = 'http://localhost:3000/getCityCoordinates?cityName=';
 //const weatherBaseAPI = 'http://localhost:3000/getWeatherForecast?long=';
-let lat = "0.0";
-let lng = "0.0";
+//let lat = "0.0";
+//let lng = "0.0";
 let cityName = '';
 let userResponse = '';
 // Create a new date instance dynamically with JS
@@ -39,7 +39,7 @@ function getCityCoordinates(e) {
 
           console.log('Data comming from the server: ', data);
 
-          getWeatherForecast(data.lat, data.lng)
+          getWeatherForecast(data.lat, data.lng, daysToTravel)
             // userResponse = document.getElementById('feelings').value;
             // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
@@ -70,12 +70,14 @@ const getGeoResponse = async (cityName, daysToTravel)=>{
 }
 
 /*Asyn call GET to Weather API*/
-const getWeatherForecast = async (lat, lng)=>{
-  lat = lat;
-  lng = lng;
-  const weatherBaseAPI = `http://localhost:3000/getWeatherForecast?lat=${lat}&lng=${lng}`;
+const getWeatherForecast = async (lat, lng, daysToTravel)=>{
+  //const lat = lat;
+  //const lng = lng;
+  //const daysToTravel = daysToTravel;
+  const weatherBaseAPI = `http://localhost:3000/getWeatherForecast?lat=${lat}&lng=${lng}&daysToTravel=${daysToTravel}`;
   console.log("lat: " + lat + " and lng: " + lng)
   console.log('Weather Base URL: ' + weatherBaseAPI);
+  console.log('Days to Travel from getWeatherForecast: ' + daysToTravel);
   const res = await fetch(weatherBaseAPI)
   // const res = await fetch(baseURL + zip + apiKey)
 
