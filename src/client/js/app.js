@@ -43,11 +43,22 @@ function getCityCoordinates(e) {
             // userResponse = document.getElementById('feelings').value;
             // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
-            //Add data to post request
-            postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
-            .then(
-                updateUI()
-            )
+            .then(function(data) {
+
+              console.log("DATA COMMING FROM WEATHER BIT: ", data);
+              getImageFromTravelPlace(data.name)
+
+                .then( function(data) {
+
+                  console.log('This is the complete data APP side: ', data);
+
+                    // //Add data to post request
+                    // postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
+                    // .then(
+                    //     updateUI()
+                    // )
+                })
+            })
         })
 
     } else {
@@ -84,6 +95,24 @@ const getWeatherForecast = async (lat, lng, daysToTravel)=>{
   try {
       const data = await res.json();
       console.log('Data from Weather  BIT: ',  data);
+      return data;
+  } catch(error) {
+      console.log('error', error)
+  }
+}
+
+/*Asyn call GET to Pixabay API*/
+const getImageFromTravelPlace = async (cityName)=>{
+  //const lat = lat;
+  //const lng = lng;
+  //const daysToTravel = daysToTravel;
+  const pixabayBaseAPI = `http://localhost:3000/getImageFromTravelPlace?cityName=${cityName}`;
+  console.log('City name going to server: ' + cityName);
+  const res = await fetch(pixabayBaseAPI)
+  // const res = await fetch(baseURL + zip + apiKey)
+  try {
+      const data = await res.json();
+      console.log('Data Pixabay API: ',  data);
       return data;
   } catch(error) {
       console.log('error', error)

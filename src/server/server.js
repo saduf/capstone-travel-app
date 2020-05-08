@@ -135,36 +135,57 @@ app.get('/getWeatherForecast', function (req, res) {
   .catch(function(error){
     console.log(error);
   });
-
-  // geocoder.get('search',{
-  //   q: req.query.cityName
-  // })
-  // .then(function(response){
-  //   // var jsonObjectResponse = JSON.parse(response);
-  //   console.log(typeof response);
-  //   var keys = Object.keys(response);
-  //   console.log("KEYS:", keys)
-  //   console.log("Total Results Count: ", response['totalResultsCount'])
-  //   console.log("First Element: ", response['geonames'][0])
-  //   console.log("Accessing Long: "+ response['geonames'][0]['lng'] + "and lat: " + response['geonames'][0]['lat'])
-
-  //   newEntry = {
-  //     lat: response['geonames'][0]['lat'],
-  //     lng: response['geonames'][0]['lng'],
-  //     name: response['geonames'][0]['name'],
-  //     countryName: response['geonames'][0]['countryName'],
-  //     daysToTravel: req.query.daysToTravel
-  //   }
-
-  //   projectData.push(newEntry);
-  //   const index = projectData.length-1;
-  //   res.send(projectData[index]);
-
-  // })
-  // .catch(function(error){
-  //   console.log(error);
-  // });
 })
+
+app.get('/getImageFromTravelPlace', function (req, res) { 
+  console.log('Server side cityName:' + req.query.cityName);
+  
+  const cityName = req.query.cityName;
+  const API_KEY = process.env.PIXABAY_API;
+  const encodedURI = encodeURIComponent(cityName);
+  console.log('Encoded URI: ', encodedURI)
+  const baseURL = `https://pixabay.com/api/?key=${API_KEY}&q=${cityName}`
+
+  console.log("Calling Pixabay API from server: ", baseURL);
+
+  getImage(baseURL)
+  .then(function(response){ 
+
+    var keys = Object.keys(response);
+    console.log("KEYS PIXABAY:", keys)
+
+    const howManyImagesReturned = response['hits'].length;
+
+    if (howManyImagesReturned > 0) {
+      console.log(`We got ${howManyImagesReturned} from pixabay`);
+      const pickRandomImage = Math.floor(Math.random() * howManyImagesReturned); 
+      console.log(`Selecting random image # ${pickRandomImage}`)
+
+      const randomImage = response['hits'][pickRandomImage];
+
+      const imageInfo = {
+        'imagesURL' : randomImage['webformatURL'],
+        'imageWidth' : randomImage['webformatWidth'],
+        'imageHeight' : randomImage['webformatHeight']
+      }
+
+      console.log("This is the random Image Info: ", JSON.stringify(imageInfo));
+
+      projectData[projectData.length-1]['imageInfo'] = imageInfo;
+
+      console.log("This is the complete object server side: ", projectData[projectData.length-1]);
+
+      res.send(projectData[projectData.length-1]);
+
+    } else {
+      console.log('Use a placehodler image');
+    }
+
+  })
+  .catch(function(error){
+    console.log(error);
+  });
+});
 
 // Call weatherbit with lat and lng
 const getWeather = async (baseURL)=>{
@@ -174,6 +195,19 @@ const getWeather = async (baseURL)=>{
   try {
       const data = await res.json();
       //console.log('Data from weather API: ',  data);
+      return data;
+  } catch(error) {
+      console.log('error', error)
+  }
+}
+
+// Call weatherbit with lat and lng
+const getImage = async (baseURL)=>{
+  const res = await fetch(baseURL)
+  // const res = await fetch(baseURL + zip + apiKey)
+  try {
+      const data = await res.json();
+      console.log('Data from PIXABAY API: ',  data);
       return data;
   } catch(error) {
       console.log('error', error)
