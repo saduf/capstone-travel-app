@@ -1,6 +1,5 @@
 import { dateValidation } from './validateDate.js'
 
-const geoBaseURL = 'http://localhost:3000/getCityCoordinates?cityName=';
 //const weatherBaseAPI = 'http://localhost:3000/getWeatherForecast?long=';
 //let lat = "0.0";
 //let lng = "0.0";
@@ -33,7 +32,7 @@ function getCityCoordinates(e) {
         // var keys = Object.keys(travelDate);
         // console.log("KEYS:", keys)
         
-        getGeoResponse(cityName, daysToTravel)
+        getGeoResponse(cityName, daysToTravel, travelDate)
 
         .then(function(data) {
 
@@ -67,8 +66,12 @@ function getCityCoordinates(e) {
 }
 
 /*Asyn call GET to Weather API*/
-const getGeoResponse = async (cityName, daysToTravel)=>{
-    const res = await fetch(geoBaseURL + cityName + "&daysToTravel=" + daysToTravel)
+const getGeoResponse = async (cityName, daysToTravel, travelDate)=>{
+
+   // const res = await fetch(geoBaseURL + cityName + "&daysToTravel=" + daysToTravel)
+    const geoBaseURL = `http://localhost:3000/getCityCoordinates?cityName=${cityName}&daysToTravel=${daysToTravel}&travelDate=${travelDate}`;
+    //const res = await fetch(geoBaseURL + cityName + "&daysToTravel=" + daysToTravel)
+    const res = await fetch(geoBaseURL)
     // const res = await fetch(baseURL + zip + apiKey)
 
     try {

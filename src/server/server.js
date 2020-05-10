@@ -53,6 +53,7 @@ app.get('/', function (req, res) {
 app.get('/getCityCoordinates', function (req, res) {
   console.log('City Name:' + req.query.cityName)
   console.log('Days to travel from the server: ' + req.query.daysToTravel)
+  console.log('Travel date: ', req.query.travelDate);
 
   geocoder.get('search',{
     q: req.query.cityName
@@ -71,7 +72,8 @@ app.get('/getCityCoordinates', function (req, res) {
       lng: response['geonames'][0]['lng'],
       name: response['geonames'][0]['name'],
       countryName: response['geonames'][0]['countryName'],
-      daysToTravel: req.query.daysToTravel
+      daysToTravel: req.query.daysToTravel,
+      travelDate: req.query.travelDate
     }
 
     projectData.push(newEntry);
