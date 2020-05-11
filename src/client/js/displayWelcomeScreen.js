@@ -114,7 +114,7 @@ let x = '';
                 <p>Todays weather is: </p>
                 </div>
                 <div class="box" id="dbr-bottom">
-                <p>High: ${data.maxTemp}, Low:${data.lowTemp}
+                <p>High: ${data.maxTemp} &#8304;F, Low:${data.lowTemp} &#8304;F
                     <br> ${data.weatherDescription}
                 </p>
                 </div>
@@ -164,7 +164,7 @@ let x = '';
                 <p>${data.weatherInfo.returnText}:</p>
                 </div>
                 <div class="box" id="dbr-bottom">
-                <p>High: ${data.weatherInfo.maxTemp}, Low:${data.weatherInfo.lowTemp}
+                <p>High: ${data.weatherInfo.maxTemp} &#8304;F, Low:${data.weatherInfo.lowTemp} &#8304;F
                     <br> ${data.weatherInfo.weatherDescription}
                 </p>
                 </div>
@@ -215,7 +215,7 @@ let x = '';
                 <p>Todays weather is: </p>
                 </div>
                 <div class="box" id="dbr-bottom">
-                <p>High: ${data.maxTemp}, Low:${data.lowTemp}
+                <p>High: ${data.maxTemp} &#8304;F, Low:${data.lowTemp} &#8304;F
                     <br> ${data.weatherDescription}
                 </p>
                 </div>
