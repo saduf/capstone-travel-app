@@ -1,4 +1,8 @@
-import { dateValidation } from './validateDate.js'
+import { dateValidation } from './validateData.js'
+
+import { getLocation } from './displayWelcomeScreen.js'
+
+import { displayReesultsHTML } from './displayWelcomeScreen.js'
 
 //const weatherBaseAPI = 'http://localhost:3000/getWeatherForecast?long=';
 //let lat = "0.0";
@@ -18,51 +22,86 @@ console.log("Todays date is: ", newDate)
 // Add listener to button with id generate
 document.getElementById('generate').addEventListener('click', getCityCoordinates);
 
+// Listen for dom loaded to display welcome screen
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('the DOM is ready to be interacted with!');
+  //x = document.getElementsByClassName("display-results")[0];
+  //console.log("This is x in page loading: ", x);
+  getLocation();
+});
+
 function getCityCoordinates(e) {
     cityName = document.getElementById('city').value;
     console.log("City name @ app: " + cityName)
     const travelDate = document.getElementById('travelDate').value;
 
-    const daysToTravel = dateValidation(travelDate);
+    if ( cityName && travelDate) {
 
-    console.log("Days to travel", daysToTravel);
+        const daysToTravel = dateValidation(travelDate);
 
-    // Only make the server call if the date to travel is in the future and no more than 1 year apart.
-      if (daysToTravel > 0) {
-        // var keys = Object.keys(travelDate);
-        // console.log("KEYS:", keys)
-        
-        getGeoResponse(cityName, daysToTravel, travelDate)
+        console.log("Days to travel", daysToTravel);
 
-        .then(function(data) {
-
-          console.log('Data comming from the server: ', data);
-
-          getWeatherForecast(data.lat, data.lng, daysToTravel)
-            // userResponse = document.getElementById('feelings').value;
-            // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+        // Only make the server call if the date to travel is in the future and no more than 1 year apart.
+          if (daysToTravel > 0) {
+            // var keys = Object.keys(travelDate);
+            // console.log("KEYS:", keys)
+            
+            getGeoResponse(cityName, daysToTravel, travelDate)
 
             .then(function(data) {
 
-              console.log("DATA COMMING FROM WEATHER BIT: ", data);
-              getImageFromTravelPlace(data.name)
+              console.log('Data comming from the server: ', data);
 
-                .then( function(data) {
+              getWeatherForecast(data.lat, data.lng, daysToTravel)
+                // userResponse = document.getElementById('feelings').value;
+                // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
-                  console.log('This is the complete data APP side: ', data);
+                .then(function(data) {
 
-                    // //Add data to post request
-                    // postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
-                    // .then(
-                    //     updateUI()
-                    // )
+                  console.log("DATA COMMING FROM WEATHER BIT: ", data);
+                  getImageFromTravelPlace(data.name)
+
+                    .then( function(data) {
+
+                      console.log('This is the complete data APP side: ', data);
+
+                      displayReesultsHTML(data);
+
+                        // //Add data to post request
+                        // postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
+                        // .then(
+                        //     updateUI()
+                        // )
+                    })
                 })
             })
-        })
 
+        } else {
+          console.log("Please enter a valid date to travel, no in the past, not today, not in the future");
+          const validateMessage = "Please enter a valid date to travel"
+          validateTextDisplay(validateMessage)
+        }
     } else {
-      console.log("Please enter a valid date to travel, no in the parseInt, not today, not in the future");
+      const validateMessage = "Please fill Location and Date to travel"
+      validateTextDisplay(validateMessage)
+      // const validateElement = document.getElementById('search-top');
+      //   console.log("EMPTY TRAVEL DATE OR TRAVEKL CITY");
+      //   const innerHTMLString = 
+      //               `<div class="bar error">
+      //               &#9747; EMPTY TRAVEL DATE OR CITY
+      //               </div>`
+      //   validateElement.innerHTML = innerHTMLString;
     }
+}
+
+function validateTextDisplay(validateMesage) {
+  const validateElement = document.getElementById('search-top');
+  console.log("EMPTY TRAVEL DATE OR TRAVEKL CITY");
+  const innerHTMLString = 
+              `<div class="bar error">
+              &#9747; ${validateMesage}
+              </div>`
+  validateElement.innerHTML = innerHTMLString;
 }
 
 /*Asyn call GET to Weather API*/
@@ -84,11 +123,11 @@ const getGeoResponse = async (cityName, daysToTravel, travelDate)=>{
 }
 
 /*Asyn call GET to Weather API*/
-const getWeatherForecast = async (lat, lng, daysToTravel)=>{
+const getWeatherForecast = async (lat, lng, daysToTravel, welcomeScreen=0)=>{
   //const lat = lat;
   //const lng = lng;
   //const daysToTravel = daysToTravel;
-  const weatherBaseAPI = `http://localhost:3000/getWeatherForecast?lat=${lat}&lng=${lng}&daysToTravel=${daysToTravel}`;
+  const weatherBaseAPI = `http://localhost:3000/getWeatherForecast?lat=${lat}&lng=${lng}&daysToTravel=${daysToTravel}&welcomeScreen=${welcomeScreen}`;
   console.log("lat: " + lat + " and lng: " + lng)
   console.log('Weather Base URL: ' + weatherBaseAPI);
   console.log('Days to Travel from getWeatherForecast: ' + daysToTravel);
@@ -164,5 +203,7 @@ const postData = async ( url = '', data = {})=>{
   }
 
   export { getCityCoordinates }
+  export { getWeatherForecast }
+  export { getImageFromTravelPlace }
   
   

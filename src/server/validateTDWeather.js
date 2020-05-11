@@ -14,7 +14,7 @@ module.exports = {
             //retValue = weatherData[daysToTravel];
         } else {
             console.log("We will send the travel forecats for the 16th day, travel date is out of available forecast");
-            returnMessage = 'This is the weather forecast of the 16th day from today, please come back later to get an updated forecast as your date of travel approaches';
+            returnMessage = 'Weather to the 16 day from today';
             tempRetVal = weatherData[weatherData.length-1];
         }
 

@@ -91,11 +91,14 @@ app.get('/getWeatherForecast', function (req, res) {
   console.log('Lat:' + req.query.lat)
   console.log('Lon: ' + req.query.lng)
   console.log('Days to travel: ', req.query.daysToTravel);
+  console.log('In welcome screen: ', req.query.welcomeScreen);
 
   const lat = req.query.lat;
   const lng = req.query.lng;
   const API_KEY = process.env.WBIT_API;
   const daysToTravel = req.query.daysToTravel;
+  const welcomeScreen = req.query.welcomeScreen;
+  console.log("THIS IS THE WELCOME SCREEN: ", welcomeScreen);
 
   const baseURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}`
 
@@ -128,7 +131,14 @@ app.get('/getWeatherForecast', function (req, res) {
     weatherInfo['timeZone'] = timeZone;
     console.log("This is the weather info after appending city and timezone: ", weatherInfo);
 
-    projectData[projectData.length-1]['weatherInfo'] = weatherInfo;
+    if (welcomeScreen == 1) {
+      console.log("INSIDE WELCOME SCREEN");
+      projectData.push(weatherInfo);
+    } else {
+      console.log("OUTSIDE WELCOME SCREEN")
+      projectData[projectData.length-1]['weatherInfo'] = weatherInfo;
+    }
+
     console.log("This is the data persistance after updating with the weather info: ");
     console.log(projectData[projectData.length-1]);
 

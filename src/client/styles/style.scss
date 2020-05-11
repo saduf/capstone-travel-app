@@ -1,5 +1,6 @@
 @import '~js-datepicker/src/datepicker';
 @import "./style-response.scss";
+@import "./style-validate.scss";
 /* Mobile first */
 .container {
     display:grid;
@@ -213,7 +214,7 @@ button:focus {
 .search-area {
     display:grid;
     grid-template-columns: 1fr;
-    grid-template-rows: .7fr .3fr;
+    grid-template-rows: .2fr .6fr .2fr;
 }
 
 img.center {
@@ -221,9 +222,15 @@ img.center {
     top: 50%;
     transform: translateY(-50%);
     //height: 213px;
-    height: 90%;
-    width: 320px;
+    //height: 90%;
+    //width: 320px;
 }
+
+.responsive {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+  }
 
 #header-response{
     font-size: 2.5em;
