@@ -83,6 +83,18 @@ app.get('/getCityCoordinates', function (req, res) {
   })
   .catch(function(error){
     console.log(error);
+    console.log("We are in geo location error screen")
+    newEntry = {
+      lat: NaN,
+      lng: NaN,
+      name: null,
+      countryName: null,
+      daysToTravel: null,
+      travelDate: null
+    }
+    projectData.push(newEntry);
+    const index = projectData.length-1;
+    res.send(projectData[index]);
   });
   //res.sendFile(path.resolve('src/client/views/index.html'))
 })
@@ -156,7 +168,7 @@ app.get('/getImageFromTravelPlace', function (req, res) {
   const API_KEY = process.env.PIXABAY_API;
   const encodedURI = encodeURIComponent(cityName);
   console.log('Encoded URI: ', encodedURI)
-  const baseURL = `https://pixabay.com/api/?key=${API_KEY}&q=${cityName}`
+  const baseURL = `https://pixabay.com/api/?key=${API_KEY}&q=${encodedURI}`
 
   console.log("Calling Pixabay API from server: ", baseURL);
 
@@ -191,6 +203,13 @@ app.get('/getImageFromTravelPlace', function (req, res) {
 
     } else {
       console.log('Use a placehodler image');
+      const imageInfo = {
+        'imagesURL' : 'src/client/media/smiley-face-transparent-23.png',
+        'imageWidth' : 780,
+        'imageHeight' : 439
+      }
+      projectData[projectData.length-1]['imageInfo'] = imageInfo;
+      res.send(projectData[projectData.length-1]);
     }
 
   })

@@ -52,33 +52,43 @@ function getCityCoordinates(e) {
 
               console.log('Data comming from the server: ', data);
 
-              getWeatherForecast(data.lat, data.lng, daysToTravel)
-                // userResponse = document.getElementById('feelings').value;
-                // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+              // Location was not found with data input from the user, display error.
+              if (data.lat != null && data.lng != null) {
+                  getWeatherForecast(data.lat, data.lng, daysToTravel)
+                    // userResponse = document.getElementById('feelings').value;
+                    // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
-                .then(function(data) {
+                    .then(function(data) {
 
-                  console.log("DATA COMMING FROM WEATHER BIT: ", data);
-                  getImageFromTravelPlace(data.name)
+                      console.log("DATA COMMING FROM WEATHER BIT: ", data);
+                      getImageFromTravelPlace(data.name)
 
-                    .then( function(data) {
+                        .then( function(data) {
 
-                      console.log('This is the complete data APP side: ', data);
+                          console.log('This is the complete data APP side: ', data);
 
-                      displayReesultsHTML(data);
+                          displayReesultsHTML(data);
 
-                        // //Add data to post request
-                        // postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
-                        // .then(
-                        //     updateUI()
-                        // )
+                            // //Add data to post request
+                            // postData('http://localhost:3000/add', {temperature: data.main.temp, date: newDate, userResponse: userResponse} )
+                            // .then(
+                            //     updateUI()
+                            // )
+                        })
                     })
-                })
+                  } else {
+                    console.log("Please enter a valid place to travel");
+                    const validateMessage = "Please enter a valid place to travel \
+                                              <br> &#9747; Please check your spelling."
+                    validateTextDisplay(validateMessage)
+                  }
             })
 
         } else {
           console.log("Please enter a valid date to travel, no in the past, not today, not in the future");
-          const validateMessage = "Please enter a valid date to travel"
+          const validateMessage = "Please enter a valid date to travel \
+                                    <br> &#9747; Not the same day, not in the past \
+                                    <br> &#9747; and not more than 1 year away."
           validateTextDisplay(validateMessage)
         }
     } else {
