@@ -112,11 +112,12 @@ app.get('/getWeatherForecast', function (req, res) {
   const welcomeScreen = req.query.welcomeScreen;
   console.log("THIS IS THE WELCOME SCREEN: ", welcomeScreen);
 
-  const baseURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}`
+  const baseURL16Days = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&units=I`
+  //const baseURL1Year = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&units=I`
 
-  console.log("Calling Weather API from server: ", baseURL);
+  console.log("Calling Weather API from server: ", baseURL16Days);
 
-  getWeather(baseURL)
+  getWeather(baseURL16Days)
   .then(function(response){ 
     //console.log("Returned data from API: ", response);
     var keys = Object.keys(response);
