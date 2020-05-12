@@ -1,20 +1,26 @@
 function dateValidation(travelDate) {
 
-    const monthsMap = { 'Jan': 1,
-    'Feb': 2,
-    'Mar': 3,
-    'Apr': 4,
-    'May': 5,
-    'Jun': 6,
-    'Jul': 7,
-    'Aug': 8,
-    'Sep': 9,
-    'Oct': 10,
-    'Nov': 11,
-    'Dec': 12
+    const monthsMap = { 'Jan': '01',
+    'Feb': '02',
+    'Mar': '03',
+    'Apr': '04',
+    'May': '05',
+    'Jun': '06',
+    'Jul': '07',
+    'Aug': '08',
+    'Sep': '09',
+    'Oct': '10',
+    'Nov': '11',
+    'Dec': '12'
  }
 
     let daysToTravel = 0;
+
+    let retValue = {
+        'daysToTravel': daysToTravel,
+        'start_date' : NaN,
+        'end_date' : NaN
+    }
 
     const d = new Date();
     const dateMonth = d.getMonth()+1;
@@ -41,15 +47,40 @@ function dateValidation(travelDate) {
         } else {
             const currentDate = dateMonth + "/" + dateDay + "/" + dateYear;
             const travelDateNew =  monthsInt + "/" + dayString + "/" + yearString;
+            
             console.log("CurrentDate: ", currentDate);
             console.log("Travel Date: ", travelDateNew);
 
+            let dateTemp = new Date(yearString, monthsInt-1, dayString);
+            dateTemp.setDate(dateTemp.getDate()-1);
+            console.log("DATE TEMP: ", dateTemp);
+
             daysToTravel = datediff(parseDate(currentDate), parseDate(travelDateNew));
+            
+            retValue['daysToTravel'] = daysToTravel;
+
+            if (daysToTravel > 16) {
+                // Obtain end date to look for historic weather data.
+                const tempMonth = '' + (parseInt(dateTemp.getMonth())+1);
+                const month = tempMonth.length == 1 ? 0 + tempMonth : tempMonth;
+                
+
+                const start_date = ('' + (parseInt(dateTemp.getFullYear())-1)) + "-" + month + "-" + dateTemp.getDate();
+                const end_date = ('' + (parseInt(yearString)-1)) + "-" + monthsInt + "-" + dayString;
+
+                console.log("START DATE: ", start_date);
+                console.log("END DATE: ", end_date);
+
+                retValue['start_date'] = start_date;
+                retValue['end_date'] = end_date;
+            }
+
+            
         }
 
     }
 
-    return daysToTravel;
+    return retValue;
 }
 
 // new Date("dateString") is browser-dependent and discouraged, so we'll write

@@ -103,35 +103,45 @@ app.get('/getWeatherForecast', function (req, res) {
   console.log('Lat:' + req.query.lat)
   console.log('Lon: ' + req.query.lng)
   console.log('Days to travel: ', req.query.daysToTravel);
+  console.log('Start Date in Server: ', req.query.start_date);
+  console.log('End Date in Server: ', req.query.end_date);
   console.log('In welcome screen: ', req.query.welcomeScreen);
+
+  let baseURL = '';
 
   const lat = req.query.lat;
   const lng = req.query.lng;
   const API_KEY = process.env.WBIT_API;
   const daysToTravel = req.query.daysToTravel;
   const welcomeScreen = req.query.welcomeScreen;
+  const start_date = req.query.start_date;
+  const end_date = req.query.end_date;
   console.log("THIS IS THE WELCOME SCREEN: ", welcomeScreen);
 
-  const baseURL16Days = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&units=I`
-  //const baseURL1Year = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&units=I`
+  if (daysToTravel < 16) {
+    baseURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&units=I`
+  } else {
+    baseURL = `https://api.weatherbit.io/v2.0/history/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&start_date=${start_date}&end_date=${end_date}&units=I`
+  }
 
-  console.log("Calling Weather API from server: ", baseURL16Days);
+  console.log("Calling Weather API from server: ", baseURL);
 
-  getWeather(baseURL16Days)
+  getWeather(baseURL)
   .then(function(response){ 
-    //console.log("Returned data from API: ", response);
+    console.log("Returned data from API: ", response);
     var keys = Object.keys(response);
     console.log("KEYS:", keys)
     const jsonArray = response['data'];
     const cityName = response['city_name'] + ', ' + response['country_code'] ;
     const timeZone = response['timezone'];
-    //console.log('weatherArray: ', jsonArray);
+    console.log('weatherArray: ', jsonArray);
     console.log("weatherArray Length: ", jsonArray.length);
-    console.log("weatherArray Description: ", jsonArray[0]['weather']['description']);
+    //console.log("weatherArray Description: ", jsonArray[0]['weather']['description']);
     console.log("weatherArray Low Temp: ", jsonArray[0]['low_temp']);
     console.log("weatherArray Max Temp: ", jsonArray[0]['max_temp']);
     console.log("weatherArray cityName: ", cityName);
     console.log("weatherArray timeZone: ", timeZone);
+    console.log("WeatherArray datetime: ", jsonArray[0].datetime)
 
     const weatherInfo = validateTDW.getWeatherIfInTravelWindow(jsonArray, daysToTravel);
     console.log("This is the returned weather info after validation: ", weatherInfo);

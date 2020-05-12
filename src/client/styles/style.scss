@@ -102,13 +102,16 @@ font-size: 20px;
 
 .headline {
     grid-area: hd;
+    display: flex;
 	margin: 1em 0 0.5em 0;
 	color: #343434;
 	font-weight: normal;
 	font-family: 'Ultra', sans-serif;   
 	font-size: 36px;
 	text-transform: uppercase;
-	text-shadow: 0 2px white, 0 3px #777;
+    text-shadow: 0 2px white, 0 3px #777;
+    align-items: center;
+    justify-content: center;
 }
 
 .title{

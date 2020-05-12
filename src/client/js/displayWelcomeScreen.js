@@ -44,7 +44,7 @@ let x = '';
 
   function displayWelcomeMessage (lat, lng, daysToTravel, defaultLocation) {
 
-    getWeatherForecast(lat, lng, daysToTravel, 1)
+    getWeatherForecast(lat, lng, daysToTravel, 0, 0, 1)
     // userResponse = document.getElementById('feelings').value;
     // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 

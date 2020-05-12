@@ -9,6 +9,8 @@ import { displayReesultsHTML } from './displayWelcomeScreen.js'
 //let lng = "0.0";
 let cityName = '';
 let userResponse = '';
+
+let retValue='';
 // Create a new date instance dynamically with JS
 let d = new Date();
 let newDate = d.getMonth()+1 +'.'+ d.getDate()+'.'+ d.getFullYear();
@@ -37,16 +39,16 @@ function getCityCoordinates(e) {
 
     if ( cityName && travelDate) {
 
-        const daysToTravel = dateValidation(travelDate);
+        retValue = dateValidation(travelDate);
 
-        console.log("Days to travel", daysToTravel);
+        console.log("Days to travel", retValue.daysToTravel);
 
         // Only make the server call if the date to travel is in the future and no more than 1 year apart.
-          if (daysToTravel > 0) {
+          if (retValue.daysToTravel > 0) {
             // var keys = Object.keys(travelDate);
             // console.log("KEYS:", keys)
             
-            getGeoResponse(cityName, daysToTravel, travelDate)
+            getGeoResponse(cityName, retValue.daysToTravel, travelDate)
 
             .then(function(data) {
 
@@ -54,9 +56,10 @@ function getCityCoordinates(e) {
 
               // Location was not found with data input from the user, display error.
               if (data.lat != null && data.lng != null) {
-                  getWeatherForecast(data.lat, data.lng, daysToTravel)
-                    // userResponse = document.getElementById('feelings').value;
-                    // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+
+                  getWeatherForecast(data.lat, data.lng, retValue.daysToTravel, retValue.start_date, retValue.end_date)
+                  // userResponse = document.getElementById('feelings').value;
+                  // newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
                     .then(function(data) {
 
@@ -133,11 +136,11 @@ const getGeoResponse = async (cityName, daysToTravel, travelDate)=>{
 }
 
 /*Asyn call GET to Weather API*/
-const getWeatherForecast = async (lat, lng, daysToTravel, welcomeScreen=0)=>{
+const getWeatherForecast = async (lat, lng, daysToTravel, start_date=0, end_date=0, welcomeScreen=0)=>{
   //const lat = lat;
   //const lng = lng;
   //const daysToTravel = daysToTravel;
-  const weatherBaseAPI = `http://localhost:3000/getWeatherForecast?lat=${lat}&lng=${lng}&daysToTravel=${daysToTravel}&welcomeScreen=${welcomeScreen}`;
+  const weatherBaseAPI = `http://localhost:3000/getWeatherForecast?lat=${lat}&lng=${lng}&daysToTravel=${daysToTravel}&welcomeScreen=${welcomeScreen}&start_date=${start_date}&end_date=${end_date}`;
   console.log("lat: " + lat + " and lng: " + lng)
   console.log('Weather Base URL: ' + weatherBaseAPI);
   console.log('Days to Travel from getWeatherForecast: ' + daysToTravel);
