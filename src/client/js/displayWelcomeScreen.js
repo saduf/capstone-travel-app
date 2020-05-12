@@ -1,5 +1,5 @@
-import { getWeatherForecast } from './app.js'
-import { getImageFromTravelPlace } from './app.js'
+import { getWeatherForecast } from './app'
+import { getImageFromTravelPlace } from './app'
 
 let x = '';
   
@@ -43,6 +43,7 @@ let x = '';
   }
 
   function displayWelcomeMessage (lat, lng, daysToTravel, defaultLocation) {
+      console.log("IN DISPLAY WELCOME MESSAGE")
 
     getWeatherForecast(lat, lng, daysToTravel, 0, 0, 1)
     // userResponse = document.getElementById('feelings').value;
@@ -226,5 +227,7 @@ let x = '';
         x.innerHTML = innerHTMLString;
   }
 
-  export { getLocation }
-  export { displayReesultsHTML }
+  export { getLocation, 
+           displayReesultsHTML,
+           displayWelcomeMessage }
+//   export { displayReesultsHTML }

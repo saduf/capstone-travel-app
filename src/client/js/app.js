@@ -1,8 +1,10 @@
-import { dateValidation } from './validateData.js'
+const fetch = require("node-fetch");
 
-import { getLocation } from './displayWelcomeScreen.js'
+import { dateValidation } from './validateData'
 
-import { displayReesultsHTML } from './displayWelcomeScreen.js'
+import { getLocation } from './displayWelcomeScreen'
+
+import { displayReesultsHTML } from './displayWelcomeScreen'
 
 //const weatherBaseAPI = 'http://localhost:3000/getWeatherForecast?long=';
 //let lat = "0.0";
@@ -33,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function getCityCoordinates(e) {
+    
+    e.preventDefault()
     cityName = document.getElementById('city').value;
     console.log("City name @ app: " + cityName)
     const travelDate = document.getElementById('travelDate').value;
@@ -215,8 +219,10 @@ const postData = async ( url = '', data = {})=>{
     }
   }
 
-  export { getCityCoordinates }
-  export { getWeatherForecast }
-  export { getImageFromTravelPlace }
+  export { getCityCoordinates, 
+           getWeatherForecast,
+           getImageFromTravelPlace }
+  // export { getWeatherForecast }
+  // export { getImageFromTravelPlace }
   
   
