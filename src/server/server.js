@@ -201,7 +201,7 @@ app.get('/getImageFromTravelPlace', function (req, res) {
     } else {
       console.log('Use a placehodler image');
       const imageInfo = {
-        'imagesURL' : 'src/client/media/smiley-face-transparent-23.png',
+        'imagesURL' : 'https://pixabay.com/get/54e9d24a4b52ab14f1dc84609629317a1639dce6554c704c7d267fd49e4cc15a_640.jpg',
         'imageWidth' : 780,
         'imageHeight' : 439
       }
