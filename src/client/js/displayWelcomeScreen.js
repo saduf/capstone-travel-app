@@ -1,5 +1,5 @@
-import { getWeatherForecast } from './app'
-import { getImageFromTravelPlace } from './app'
+import { getWeatherForecast } from './formHandler'
+import { getImageFromTravelPlace } from './formHandler'
 
 let x = '';
   
