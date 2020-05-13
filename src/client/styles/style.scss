@@ -160,6 +160,23 @@ input{
     margin:5px;
 }
 
+.button-search:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+.button-innactive{
+    width: 200px;
+    height: 50px;
+    background: #3b4a6b;
+    color: #f0d43a;
+    font-size: 26px;
+    font-family: 'Oswald', sans-serif;
+    border: none;
+    box-shadow: 2px 4px 5px #444;
+    margin:5px;
+}
+
 .button-save{
     width: 100px;
     height: 25px;
