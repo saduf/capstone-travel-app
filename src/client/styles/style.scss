@@ -14,13 +14,10 @@
         "hdb"
         "main"
         "ft";
-    //margin: auto;
-    //grid-gap: 5px;
   }
 
   .box {
     border: 1px solid red;
-    //background: #F8FA9D;
 }
 
 body{
@@ -29,14 +26,7 @@ body{
 }
 
 #app{
-    //display: grid;
-    //grid-auto-rows: minmax(150px, auto);
-    /* grid-template-columns:  */
-   // height:100vh;
-    //background: #f23557;
     color: #f0d43a;
-    //justify-content: center;
-    //grid-gap: 1em;
     font-size: 20px;
     font-family: 'Oswald', sans-serif;
 }
@@ -48,9 +38,6 @@ body{
 
 .travel-info {
     grid-area: ft;
-    // align-items: center;
-    // justify-content: center;
-    //margin: 0 auto;
     background-color: lightgrey;
     display: flex;
     flex-flow: column wrap;
@@ -59,21 +46,16 @@ body{
 }
 
 #search-top {
-    //display: inline-block;
     padding: 20px;
 }
 
 #search-bottom {
-    // display: block;
-    // align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 
 }
-
-
 
 .display-results {
     grid-area: main;
@@ -121,11 +103,6 @@ color: silver;
 
 /*  Basic Styling To Override Default For Basic HTML Elements */
 label {
-    /* Other styling... */
-    // height: 50px;
-    // background: grey;
-    //display: inline-block;
-    //display:inline-block;
     width: 140px;
     text-align: right;
     font-size: 2em;
@@ -135,10 +112,6 @@ label {
 }
 
 input{
-    //display:flex;
-    // align-items: center;
-    // justify-content: center;
-    //display:inline-block;
     height: 60px;
     width: 320px;
     background: lightgrey;
@@ -241,9 +214,6 @@ img.center {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    //height: 213px;
-    //height: 90%;
-    //width: 320px;
 }
 
 .responsive {

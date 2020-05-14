@@ -3,6 +3,7 @@ require('dotenv').config()
 const fetch = require("node-fetch");
 const geoMapKey = process.env.GEOMAP_ID;
 
+// Initialize Geocoder api
 var GeocoderGeonames = require('geocoder-geonames'),
     geocoder = new GeocoderGeonames({
       username:      process.env.GEOMAP_API,
@@ -31,28 +32,26 @@ app.use(express.static('dist'));
 
 console.log(__dirname)
 
+// Set the server endpoint
 app.get('/', function (req, res) {
     res.sendFile('dist/index.html')
-    //res.sendFile(path.resolve('src/client/views/index.html'))
 })
 
+// Endpoint to get lat and lon coordinates from City name input from the user.
 app.get('/getCityCoordinates', function (req, res) {
   console.log('City Name:' + req.query.cityName)
   console.log('Days to travel from the server: ' + req.query.daysToTravel)
   console.log('Travel date: ', req.query.travelDate);
-
+  // GET call to coordiantes service.
   geocoder.get('search',{
     q: req.query.cityName
   })
   .then(function(response){
-    // var jsonObjectResponse = JSON.parse(response);
     console.log(typeof response);
     var keys = Object.keys(response);
-    console.log("KEYS:", keys)
-    console.log("Total Results Count: ", response['totalResultsCount'])
-    console.log("First Element: ", response['geonames'][0])
     console.log("Accessing Long: "+ response['geonames'][0]['lng'] + "and lat: " + response['geonames'][0]['lat'])
 
+    // Collect and persist useful information.
     newEntry = {
       lat: response['geonames'][0]['lat'],
       lng: response['geonames'][0]['lng'],
@@ -64,6 +63,7 @@ app.get('/getCityCoordinates', function (req, res) {
 
     projectData.push(newEntry);
     const index = projectData.length-1;
+
     res.send(projectData[index]);
 
   })
@@ -78,20 +78,15 @@ app.get('/getCityCoordinates', function (req, res) {
       daysToTravel: null,
       travelDate: null
     }
+    // If we fall in error response, save null data.
     projectData.push(newEntry);
     const index = projectData.length-1;
     res.send(projectData[index]);
   });
-  //res.sendFile(path.resolve('src/client/views/index.html'))
 })
 
+// GET weather forecast or history depending on how far is the date of travel from today.
 app.get('/getWeatherForecast', function (req, res) {
-  console.log('Lat:' + req.query.lat)
-  console.log('Lon: ' + req.query.lng)
-  console.log('Days to travel: ', req.query.daysToTravel);
-  console.log('Start Date in Server: ', req.query.start_date);
-  console.log('End Date in Server: ', req.query.end_date);
-  console.log('In welcome screen: ', req.query.welcomeScreen);
 
   let baseURL = '';
 
@@ -102,54 +97,45 @@ app.get('/getWeatherForecast', function (req, res) {
   const welcomeScreen = req.query.welcomeScreen;
   const start_date = req.query.start_date;
   const end_date = req.query.end_date;
-  console.log("THIS IS THE WELCOME SCREEN: ", welcomeScreen);
+  //console.log("THIS IS THE WELCOME SCREEN: ", welcomeScreen);
 
+  // GET weather forecast if days for the date of travel is less than 16. Otherwise GET weather history.
   if (daysToTravel < 16) {
     baseURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&units=I`
   } else {
     baseURL = `https://api.weatherbit.io/v2.0/history/daily?lat=${lat}&lon=${lng}&key=${API_KEY}&start_date=${start_date}&end_date=${end_date}&units=I`
   }
 
-  console.log("Calling Weather API from server: ", baseURL);
+  //console.log("Calling Weather API from server: ", baseURL);
 
+  // GET call to weather service.
   getWeather(baseURL)
   .then(function(response){ 
-    console.log("Returned data from API: ", response);
-    var keys = Object.keys(response);
-    console.log("KEYS:", keys)
+
     const jsonArray = response['data'];
     const cityName = response['city_name'] + ', ' + response['country_code'] ;
     const timeZone = response['timezone'];
-    console.log('weatherArray: ', jsonArray);
+
     console.log("weatherArray Length: ", jsonArray.length);
-    //console.log("weatherArray Description: ", jsonArray[0]['weather']['description']);
     console.log("weatherArray Low Temp: ", jsonArray[0]['low_temp']);
     console.log("weatherArray Max Temp: ", jsonArray[0]['max_temp']);
     console.log("weatherArray cityName: ", cityName);
     console.log("weatherArray timeZone: ", timeZone);
     console.log("WeatherArray datetime: ", jsonArray[0].datetime)
 
+    // Format weather data depending on the date of travel, weather forecast or history.
     const weatherInfo = validateTDW.getWeatherIfInTravelWindow(jsonArray, daysToTravel);
+
     console.log("This is the returned weather info after validation: ", weatherInfo);
-    // console.log("weatherInfo Description: ", weatherInfo['weather']['description']);
-    // console.log("weatherInfo Low Temp: ", weatherInfo['low_temp']);
-    // console.log("weatherInfo Max Temp: ", weatherInfo['max_temp']);
-    // console.log("weatherInfo cityName: ", cityName);
-    // console.log("weatherInfo timeZone: ", timeZone);
     weatherInfo['cityName'] = cityName;
     weatherInfo['timeZone'] = timeZone;
-    console.log("This is the weather info after appending city and timezone: ", weatherInfo);
 
+    // Select how to persist data, if comming from welcome screen we didn't call geolocation service, then there is no previous data indexed.
     if (welcomeScreen == 1) {
-      console.log("INSIDE WELCOME SCREEN");
       projectData.push(weatherInfo);
     } else {
-      console.log("OUTSIDE WELCOME SCREEN")
       projectData[projectData.length-1]['weatherInfo'] = weatherInfo;
     }
-
-    console.log("This is the data persistance after updating with the weather info: ");
-    console.log(projectData[projectData.length-1]);
 
     res.send(projectData[projectData.length-1]);
   })
@@ -158,27 +144,27 @@ app.get('/getWeatherForecast', function (req, res) {
   });
 })
 
+// GET image from pixabay service.
 app.get('/getImageFromTravelPlace', function (req, res) { 
-  console.log('Server side cityName:' + req.query.cityName);
   
   const cityName = req.query.cityName;
   const API_KEY = process.env.PIXABAY_API;
+
   const encodedURI = encodeURIComponent(cityName);
   console.log('Encoded URI: ', encodedURI)
-  const baseURL = `https://pixabay.com/api/?key=${API_KEY}&q=${encodedURI}`
 
-  console.log("Calling Pixabay API from server: ", baseURL);
+  const baseURL = `https://pixabay.com/api/?key=${API_KEY}&q=${encodedURI}`
 
   getImage(baseURL)
   .then(function(response){ 
 
-    var keys = Object.keys(response);
-    console.log("KEYS PIXABAY:", keys)
-
+    // We randomly select an image from the results, we need the total images returned.
     const howManyImagesReturned = response['hits'].length;
 
     if (howManyImagesReturned > 0) {
       console.log(`We got ${howManyImagesReturned} from pixabay`);
+
+      // Select random image from the results.
       const pickRandomImage = Math.floor(Math.random() * howManyImagesReturned); 
       console.log(`Selecting random image # ${pickRandomImage}`)
 
@@ -199,6 +185,7 @@ app.get('/getImageFromTravelPlace', function (req, res) {
       res.send(projectData[projectData.length-1]);
 
     } else {
+      // If now image returned, use a happy face at least :)
       console.log('Use a placehodler image');
       const imageInfo = {
         'imagesURL' : 'https://pixabay.com/get/54e9d24a4b52ab14f1dc84609629317a1639dce6554c704c7d267fd49e4cc15a_640.jpg',
@@ -218,24 +205,21 @@ app.get('/getImageFromTravelPlace', function (req, res) {
 // Call weatherbit with lat and lng
 const getWeather = async (baseURL)=>{
   const res = await fetch(baseURL)
-  // const res = await fetch(baseURL + zip + apiKey)
-
   try {
       const data = await res.json();
-      //console.log('Data from weather API: ',  data);
       return data;
   } catch(error) {
       console.log('error', error)
   }
 }
 
-// Call weatherbit with lat and lng
+// Call pixabit with city name
 const getImage = async (baseURL)=>{
   const res = await fetch(baseURL)
   // const res = await fetch(baseURL + zip + apiKey)
   try {
       const data = await res.json();
-      console.log('Data from PIXABAY API: ',  data);
+      // console.log('Data from PIXABAY API: ',  data);
       return data;
   } catch(error) {
       console.log('error', error)
@@ -246,6 +230,5 @@ const port = 8081;
 /* Spin up the server*/
 app.listen(port, listening);
  function listening(){
-    // console.log(server);
     console.log(`running on localhost: ${port}`);
   };

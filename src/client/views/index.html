@@ -5,33 +5,31 @@
 <title>Weather Journal</title>
 <link href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Varela&display=swap" rel="stylesheet">
-<!-- <link rel="stylesheet" href="../styles/style.css"> -->
-<!-- <script type="text/javascript" src="../../../dist/main.js"></script> -->
 </head>
  <body>
-   <div class="container box">
+   <div class="container">
 
         <div class ="holder headline">
           Travel Planner
         </div>
 
-        <div class ="travel-info box">
+        <div class ="travel-info">
           <div class='search-area'>
-            <div class='box' id='search-top'></div>
+            <div id='search-top'></div>
 
-            <div class="box" id="search-middle">
+            <div id="search-middle">
               
-              <div class="box" id="city-data">
+              <div id="city-data">
                 <label for="city">My Trip to:</label>
                 <input type="text" id="city" placeholder="Enter Location...">
               </div>
-              <div class="box" id="travel-data">
+              <div id="travel-data">
                 <label for="travel_date">Departing:</label>
                 <input type="text" id="travelDate" name="travelDate" placeholder="MM/DD/YYYY">
               </div>
 
             </div>
-            <div class="box" id="search-bottom">
+            <div id="search-bottom">
                 <button class="button-search" id="generate" type = "submit"> save trip </button>
                 <button class="button-innactive" id="save" type = "submit"> remove trip </button>
             </div>
@@ -44,15 +42,12 @@
         </div>
 
         <div class ="holder entry">
-          <!-- <div class = "title">Most Recent Entry</div> -->
         <div id = "entryHolder">
           <div id = "date"></div> 
         <div id = "temp"></div>
         <div id = "content"></div>
         </div>
         </div>
-      <!-- <script src="../js/app.js" type="text/javascript"></script> -->
-      <!-- <script src="datepicker.min.js"></script>  -->
 </div>
 </body>
 </html>
