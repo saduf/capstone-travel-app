@@ -83,6 +83,8 @@ If you are prompted to grant access to your location, the application displays a
 
 Enter a information in the input fields, and press save trip large button to GET results from the server. Once the results are back the screen will update with the weather forecast, an image, and other information related to the city and date of travel.
 
+`Note: Only the bottom "save trip" button is active for interaction with the user, other buttons are for display/extend funtionality if needed.`
+
 ![alt text](./src/client/media/screenshoot.png)
 
 10. Prod env will be available at localhost:8081  
